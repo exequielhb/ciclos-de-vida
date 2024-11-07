@@ -1,0 +1,46 @@
+---
+interface Props {
+  icon: string;
+  title: string;
+  value: string;
+  description: string;
+}
+
+const { icon, title, value, description } = Astro.props;
+---
+
+<div class="result-card">
+  <i class="icon" data-lucide={icon}></i>
+  <h3>{title}</h3>
+  <p class="value">{value}</p>
+  <span class="description">{description}</span>
+</div>
+
+<style>
+  .result-card {
+    @apply bg-gray-800/50 p-6 rounded-xl text-center flex flex-col items-center justify-center gap-2 backdrop-blur-sm;
+    min-height: 200px;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.1), /* Purple glow */
+                0 8px 16px rgba(0, 0, 0, 0.2),    /* Base shadow */
+                inset 0 0 20px rgba(255, 255, 255, 0.05); /* Inner light */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .result-card .icon {
+    @apply w-12 h-12 text-blue-400 mb-2;
+    filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.3));
+  }
+
+  .result-card h3 {
+    @apply text-gray-300 text-lg font-medium;
+  }
+
+  .result-card .value {
+    @apply text-4xl font-bold text-purple-400;
+    text-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+  }
+
+  .result-card .description {
+    @apply text-sm text-gray-400 mt-1;
+  }
+</style>

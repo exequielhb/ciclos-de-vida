@@ -1,0 +1,250 @@
+---
+import ResultCard from './ResultCard.astro';
+import SocialShare from './SocialShare.astro';
+import FAQ from './FAQ.astro';
+---
+
+<div class="container mx-auto px-4 py-8">
+  <form id="cyclesForm" class="max-w-md mx-auto space-y-6 mb-12">
+    <div class="space-y-2">
+      <label for="name" class="text-sm font-medium text-gray-200">Nombre:</label>
+      <input 
+        type="text" 
+        id="name" 
+        name="name" 
+        required 
+        class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white"
+        placeholder="Ingresa tu nombre"
+      >
+    </div>
+    <div class="space-y-2">
+      <label for="country" class="text-sm font-medium text-gray-200">País:</label>
+      <select id="country" name="country" required class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white">
+        <option value="">Selecciona un país</option>
+        <option value="AR">Argentina</option>
+        <option value="BO">Bolivia</option>
+        <option value="BR">Brasil</option>
+        <option value="CA">Canadá</option>
+        <option value="CL">Chile</option>
+        <option value="CO">Colombia</option>
+        <option value="CR">Costa Rica</option>
+        <option value="CU">Cuba</option>
+        <option value="DO">República Dominicana</option>
+        <option value="EC">Ecuador</option>
+        <option value="SV">El Salvador</option>
+        <option value="ES">España</option>
+        <option value="GT">Guatemala</option>
+        <option value="HT">Haití</option>
+        <option value="HN">Honduras</option>
+        <option value="MX">México</option>
+        <option value="NI">Nicaragua</option>
+        <option value="PA">Panamá</option>
+        <option value="PY">Paraguay</option>
+        <option value="PE">Perú</option>
+        <option value="PR">Puerto Rico</option>
+        <option value="UY">Uruguay</option>
+        <option value="US">Estados Unidos</option>
+        <option value="VE">Venezuela</option>
+      </select>
+    </div>
+    <div class="space-y-2">
+      <label for="age" class="text-sm font-medium text-gray-200">Edad:</label>
+      <input 
+        type="number" 
+        id="age" 
+        name="age" 
+        min="1" 
+        max="99" 
+        required 
+        class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white"
+        oninput="this.value = Math.min(Math.max(1, this.value), 99)"
+      >
+      <p class="text-xs text-gray-400">La edad debe estar entre 1 y 99 años</p>
+    </div>
+    <button 
+      type="submit"
+      class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+    >
+      Calcular
+    </button>
+  </form>
+
+  <div id="results" class="hidden">
+    <h2 class="text-2xl font-bold text-center text-white mb-8">
+      Hola <span class="name-gradient"></span>, Tus Ciclos Naturales son:
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <ResultCard
+        icon="sun"
+        title="Estaciones"
+        value="-"
+        description="4 Temporadas al año"
+      />
+      <ResultCard
+        icon="moon"
+        title="Lunas Llenas"
+        value="-"
+        description="12 lunas llenas al año"
+      />
+      <ResultCard
+        icon="sunset"
+        title="Puestas de Sol"
+        value="-"
+        description="365 atardeceres al año"
+      />
+      <ResultCard
+        icon="snowflake"
+        title="Inviernos"
+        value="-"
+        description="1 invierno por año"
+      />
+      <ResultCard
+        icon="flower"
+        title="Primaveras"
+        value="-"
+        description="1 primavera por año"
+      />
+      <ResultCard
+        icon="sun-medium"
+        title="Veranos"
+        value="-"
+        description="1 verano por año"
+      />
+      <ResultCard
+        icon="leaf"
+        title="Otoños"
+        value="-"
+        description="1 otoño por año"
+      />
+      <ResultCard
+        icon="moon-star"
+        title="Eclipses Lunares"
+        value="-"
+        description="2-3 eclipses lunares al año"
+      />
+      <ResultCard
+        icon="sun-dim"
+        title="Eclipses Solares"
+        value="-"
+        description="2 eclipses solares al año"
+      />
+    </div>
+
+    <div id="socialShare"></div>
+  </div>
+
+  <FAQ />
+</div>
+
+<style>
+  .name-gradient {
+    @apply bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent;
+  }
+</style>
+
+<script>
+  import { createIcons, Sun, Moon, Sunset, Snowflake, Flower, SunMedium, Leaf, MoonStar, SunDim } from 'lucide';
+
+  function initializeCalculator() {
+    createIcons({
+      icons: {
+        Sun,
+        Moon,
+        Sunset,
+        Snowflake,
+        Flower,
+        SunMedium,
+        Leaf,
+        MoonStar,
+        SunDim
+      }
+    });
+
+    const form = document.getElementById('cyclesForm');
+    const results = document.getElementById('results');
+    const socialShareContainer = document.getElementById('socialShare');
+
+    if (form && results && socialShareContainer) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameInput = document.getElementById('name') as HTMLInputElement;
+        const ageInput = document.getElementById('age') as HTMLInputElement;
+        const age = Math.min(Math.max(1, parseInt(ageInput.value)), 99);
+        const country = (document.getElementById('country') as HTMLSelectElement).value;
+
+        // Update name in title
+        const nameElement = results.querySelector('.name-gradient');
+        if (nameElement) {
+          nameElement.textContent = nameInput.value;
+        }
+
+        // Cálculos aproximados
+        const calculations = {
+          'Estaciones': age * 4,
+          'Lunas Llenas': age * 12,
+          'Puestas de Sol': age * 365,
+          'Inviernos': age,
+          'Primaveras': age,
+          'Veranos': age,
+          'Otoños': age,
+          'Eclipses Lunares': Math.round(age * 2.5),
+          'Eclipses Solares': Math.round(age * 2)
+        };
+
+        // Update all result cards
+        const cards = results.querySelectorAll('.result-card');
+        cards.forEach(card => {
+          const title = card.querySelector('h3')?.textContent;
+          if (title && title in calculations) {
+            const value = calculations[title];
+            card.querySelector('.value').textContent = value.toLocaleString();
+          }
+        });
+
+        // Create social share component
+        const shareText = `¡Hola! Soy ${nameInput.value} y estos son mis ciclos naturales de vida: 
+🌍 ${calculations['Estaciones'].toLocaleString()} estaciones
+🌕 ${calculations['Lunas Llenas'].toLocaleString()} lunas llenas
+🌅 ${calculations['Puestas de Sol'].toLocaleString()} puestas de sol`;
+
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(shareText)}`;
+
+        socialShareContainer.innerHTML = `
+          <div class="flex flex-col items-center gap-4 mt-8 mb-12">
+            <p class="text-gray-300 text-lg">Comparte tus resultados:</p>
+            <div class="flex gap-4">
+              <a
+                href="${twitterUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 px-6 py-3 bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white font-semibold rounded-lg transition-colors"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Compartir en X
+              </a>
+              <a
+                href="${facebookUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 px-6 py-3 bg-[#1877F2] hover:bg-[#166fe5] text-white font-semibold rounded-lg transition-colors"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Compartir en Facebook
+              </a>
+            </div>
+          </div>
+        `;
+
+        results.classList.remove('hidden');
+      });
+    }
+  }
+
+  // Initialize after DOM content is loaded
+  document.addEventListener('DOMContentLoaded', initializeCalculator);
+</script>
